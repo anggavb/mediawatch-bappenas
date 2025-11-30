@@ -1,13 +1,30 @@
-import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import AutoImport from 'unplugin-auto-import/vite';
 import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
+import path from 'path';
+
+import { defineConfig } from 'vite';
+// import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/js/app.js'],
             refresh: true,
         }),
-        tailwindcss(),
+        vue(),
+        AutoImport({
+            imports: ['vue', 'vue-router',],
+            // dts: 'resources/js/auto-imports.d.ts',
+        }),
+        // tailwindcss(),
     ],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, './resources/js'),
+            '@css': '/resources/css',
+            '@assets': '/public/assets',
+            vue: 'vue/dist/vue.esm-bundler.js',
+        },
+    },
 });
