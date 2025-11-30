@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\AuthController;
 
 // Public authentication routes
 Route::prefix('auth')->group(function () {
@@ -18,6 +19,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [AuthController::class, 'me']);
     });
+
+    Route::apiResource('media', MediaController::class);
     
     // Legacy user route (keeping for backward compatibility)
     Route::get('/user', function (Request $request) {
