@@ -20,10 +20,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [AuthController::class, 'me']);
     });
 
+    Route::post('media/import', [MediaController::class, 'import']);
     Route::apiResource('media', MediaController::class);
-    
-    // Legacy user route (keeping for backward compatibility)
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
 });

@@ -27,7 +27,6 @@ class StoreMediaRequest extends FormRequest
             'name' => 'required|string|max:255',
             'url' => 'required|string|max:255|unique:media,url',
             'logo' => 'nullable|string|max:255',
-            'favicon' => 'nullable|string|max:255',
             'media_category_id' => 'required|exists:media_categories,id',
             'media_group_id' => 'nullable|exists:media_groups,id',
         ];

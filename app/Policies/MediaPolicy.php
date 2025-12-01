@@ -63,4 +63,12 @@ class MediaPolicy
     {
         return true;
     }
+
+    /**
+     * Determine whether the user can import models.
+     */
+    public function import(User $user): bool
+    {
+        return true;
+    }
 }

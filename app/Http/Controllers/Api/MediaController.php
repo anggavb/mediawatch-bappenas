@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Media\Media;
+use Illuminate\Http\Request;
 use App\Models\Media\MediaGroup;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\Media\StoreMediaRequest;
 use App\Http\Requests\Media\UpdateMediaRequest;
 
@@ -61,5 +63,13 @@ class MediaController extends Controller
         
         $medium->delete();
         return response()->json(null, 204);
+    }
+
+    public function import(Request $request)
+    {
+        Gate::authorize('import', Media::class);
+
+        Excel::import(new \App\Imports\MediaImport, $request->file('file'));
+        return response()->json(['message' => 'Import successful'], 200);
     }
 }
