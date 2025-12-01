@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Media\Media;
+use App\Models\Media\MediaGroup;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\Media\StoreMediaRequest;
 use App\Http\Requests\Media\UpdateMediaRequest;
-use Illuminate\Support\Facades\Gate;
 
 class MediaController extends Controller
 {
@@ -15,7 +16,13 @@ class MediaController extends Controller
      */
     public function index()
     {
-        $media = Media::with('category:id,name')->orderBy('order')->get();
+        $media = Media::with(['category:id,name,order', 'group:id,name,order,is_active'])
+            ->whereHas('group', function ($query) {
+                $query->where('is_active', true);
+            })
+            ->get()
+            ->sortBy(['group.order', 'category.order'])
+            ->values();
         return response()->json($media);
     }
 
@@ -24,7 +31,16 @@ class MediaController extends Controller
      */
     public function store(StoreMediaRequest $request)
     {
-        $media = Media::create($request->validated());
+        $form = $request->validated();
+        if ($form['media_group_id'] == null) {
+            $group = MediaGroup::create([
+                'name' => $form['name'],
+                'is_active' => true,
+            ]);
+            
+            $form['media_group_id'] = $group->id;
+        }
+        $media = Media::create($form);
         return response()->json($media, 201);
     }
 

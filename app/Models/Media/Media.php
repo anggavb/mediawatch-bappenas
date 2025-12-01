@@ -12,17 +12,13 @@ class Media extends Model
 
     protected $guarded = ['id'];
 
-    protected static function boot()
-    {
-        parent::boot();
-        
-        static::creating(function ($media) {
-            $media->order = self::max('order') + 1;
-        });
-    }
-
     public function category()
     {
         return $this->belongsTo(MediaCategory::class, 'media_category_id');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(MediaGroup::class, 'media_group_id');
     }
 }

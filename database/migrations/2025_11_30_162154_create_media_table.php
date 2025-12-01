@@ -21,18 +21,31 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('media', function (Blueprint $table) {
+        Schema::create('media_groups', function (Blueprint $table) {
             $table->id();
 
             $table->string('name');
-            $table->string('url')->unique();
             $table->string('logo')->nullable();
-            $table->string('favicon')->nullable();
-            $table->integer('order');
-            $table->foreignId('media_category_id')->constrained('media_categories')->onDelete('cascade');
-            $table->string('parent_id')->nullable();
+            $table->integer('order')->nullable();
+            $table->boolean('is_active')->default(true);
 
             $table->timestamps();
+        });
+
+        Schema::create('media', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('media_group_id')->constrained('media_groups')->onDelete('set null');
+            $table->foreignId('media_category_id')->constrained('media_categories')->onDelete('cascade');
+            $table->string('name');
+            $table->string('url')->unique();
+            $table->boolean('is_active')->default(true);
+
+            $table->timestamps();
+
+            $table->index('media_group_id');
+            $table->index('media_category_id');
+            $table->index(['media_group_id', 'media_category_id']);
         });
     }
 
@@ -43,5 +56,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('media');
         Schema::dropIfExists('media_categories');
+        Schema::dropIfExists('media_groups');
     }
 };

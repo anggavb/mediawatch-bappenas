@@ -29,7 +29,7 @@ class StoreMediaRequest extends FormRequest
             'logo' => 'nullable|string|max:255',
             'favicon' => 'nullable|string|max:255',
             'media_category_id' => 'required|exists:media_categories,id',
-            'parent_id' => 'nullable|exists:media,id',
+            'media_group_id' => 'nullable|exists:media_groups,id',
         ];
     }
 }
