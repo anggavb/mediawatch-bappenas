@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MediaController;
+use App\Http\Controllers\Api\MedmonController;
 
 // Public authentication routes
 Route::prefix('auth')->group(function () {
@@ -23,3 +24,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('media/import', [MediaController::class, 'import']);
     Route::apiResource('media', MediaController::class);
 });
+
+
