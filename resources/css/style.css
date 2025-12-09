@@ -64,12 +64,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 :root {
   --default-font: ;
-  --h1: clamp(2rem, 1.2rem + 4vw, 4.5rem);
-  --h2: clamp(1.75rem, 1.11rem + 3.2vw, 3.75rem);
-  --h3: clamp(1.5rem, 1.02rem + 2.4vw, 3rem);
-  --h4: clamp(1.375rem, 1.095rem + 1.4vw, 2.25rem);
-  --h5: clamp(1.25rem, 1.05rem + 1vw, 1.875rem);
-  --h6: clamp(1.125rem, 1.005rem + 0.6vw, 1.5rem);
+  --h1: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+  --h2: clamp(1.25rem, 0.85rem + 2.5vw, 3rem);
+  --h3: clamp(1.125rem, 0.8rem + 1.8vw, 2.25rem);
+  --h4: clamp(1rem, 0.85rem + 1vw, 1.75rem);
+  --h5: clamp(0.95rem, 0.8rem + 0.75vw, 1.5rem);
+  --h6: clamp(0.9rem, 0.8rem + 0.4vw, 1.25rem);
   --size-2: 0.125rem;
   --size-4: 0.25rem;
   --size-6: 0.375rem;
@@ -149,15 +149,15 @@
   --shadow-7: 0px 4px 30px 0px rgba(46, 45, 116, 0.05);
   --shadow-8: 0px 4px 4px 0px rgba(0, 0, 0, 0.05);
   --shadow-9: 0px 4px 16px 0px rgba(46, 45, 116, 0.04);
-  --font-2xxl: 2rem;
-  --font-2xl: 1.75rem;
-  --font-xxl: 1.5rem;
-  --font-xl: 1.25rem;
-  --font-lg: 1.125rem;
-  --font-md: 1rem;
-  --font-sm: 0.875rem;
-  --font-xs: 0.75rem;
-  --font-xxs: 0.625rem;
+  --font-2xxl: 1.75rem;
+  --font-2xl: 1.5rem;
+  --font-xxl: 1.25rem;
+  --font-xl: 1.125rem;
+  --font-lg: 1rem;
+  --font-md: 0.9375rem;
+  --font-sm: 0.8125rem;
+  --font-xs: 0.6875rem;
+  --font-xxs: 0.5625rem;
   --primary-50: #E4F1FF;
   --primary-100: #BFDCFF;
   --primary-200: #95C7FF;
@@ -376,12 +376,12 @@ body {
   background-color: var(--bg-color);
   color: var(--text-secondary-light);
   font-family: "Inter", sans-serif;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   padding: 0;
   margin: 0;
   font-weight: 400;
   position: relative;
-  line-height: 1.7;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 
@@ -12886,19 +12886,19 @@ select option {
 
 .card .card-header {
   background-color: var(--white);
-  padding: 0.875rem 1.5rem;
+  padding: 0.625rem 1rem;
   border-color: var(--border-color);
   color: var(--text-secondary-light);
 }
 
 .card .card-title {
-  font-size: 1.125rem !important;
+  font-size: 0.95rem !important;
   font-weight: 600;
   color: var(--text-primary-light);
 }
 
 .card .card-body {
-  padding: 0.875rem 1.5rem;
+  padding: 0.625rem 1rem;
   color: var(--text-secondary-light);
 }
 
@@ -15552,12 +15552,12 @@ td.fc-header-center {
   }
 }
 .dashboard-main-body {
-  padding: 0.9375rem;
+  padding: 0.5rem;
 }
 
 @media (min-width: 1400px) {
   .dashboard-main-body {
-    padding: 1.5rem;
+    padding: 0.875rem;
   }
 }
 @media (min-width: 1199px) {

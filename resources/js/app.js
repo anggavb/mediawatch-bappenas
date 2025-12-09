@@ -9,8 +9,8 @@ import { Icon } from '@iconify/vue'
 // Importing Bootstrap and other global CSS files
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
-import 'vue-slick-carousel/dist/vue-slick-carousel.css'
-import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
+// import 'vue-slick-carousel/dist/vue-slick-carousel.css'
+// import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css'
 
 // Your other CSS files
 import '@css/style.css'

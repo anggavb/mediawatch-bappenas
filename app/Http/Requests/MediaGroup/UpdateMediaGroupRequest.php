@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests\Media;
+namespace App\Http\Requests\MediaGroup;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class UpdateMediaRequest extends FormRequest
+class UpdateMediaGroupRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return Gate::allows('update', $this->medium);
+        return Gate::allows('update', $this->media_group);
         // return true;
     }
 
@@ -25,11 +25,7 @@ class UpdateMediaRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|required|string|max:255',
-            'url' => 'sometimes|required|string|max:255|unique:media,url,' . $this->medium->id,
             'logo' => 'nullable|string|max:255',
-            'favicon' => 'nullable|string|max:255',
-            'media_group_id' => 'sometimes|required|exists:media_groups,id',
-            'media_category_id' => 'sometimes|required|exists:media_categories,id',
         ];
     }
 }

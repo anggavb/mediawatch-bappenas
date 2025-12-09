@@ -18,6 +18,8 @@ class MediaController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Media::class);
+
         $media = Media::with(['category:id,name,order', 'group:id,name,order,is_active'])
             ->whereHas('group', function ($query) {
                 $query->where('is_active', true);
@@ -25,6 +27,14 @@ class MediaController extends Controller
             ->get()
             ->sortBy(['group.order', 'category.order'])
             ->values();
+        return response()->json($media);
+    }
+
+    public function showUnknown()
+    {
+        Gate::authorize('viewAnyNull', Media::class);
+
+        $media = Media::where('media_group_id', null)->where('media_category_id', null)->get();
         return response()->json($media);
     }
 

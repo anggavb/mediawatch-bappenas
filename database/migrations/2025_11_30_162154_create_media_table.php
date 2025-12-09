@@ -35,8 +35,8 @@ return new class extends Migration
         Schema::create('media', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('media_group_id')->constrained('media_groups')->onDelete('set null');
-            $table->foreignId('media_category_id')->constrained('media_categories')->onDelete('cascade');
+            $table->foreignId('media_group_id')->nullable();
+            $table->foreignId('media_category_id')->nullable();
             $table->string('name');
             $table->string('url')->unique();
             $table->boolean('is_active')->default(true);

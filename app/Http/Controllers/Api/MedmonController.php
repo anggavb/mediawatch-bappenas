@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Novay\Word\Facades\Word;
+use App\Models\Medmon\Medmon;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Medmon\StoreMedmonRequest;
+use App\Http\Requests\Medmon\UpdateMedmonRequest;
+use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Shared\Converter;
@@ -19,7 +24,10 @@ class MedmonController extends Controller
      */
     public function index()
     {
-        //
+        Gate::authorize('viewAny', Medmon::class);
+
+        $medmons = Medmon::orderBy('datetime', 'asc')->get();
+        return response()->json($medmons);
     }
 
     public function generateReport(Request $request)
@@ -310,32 +318,47 @@ class MedmonController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreMedmonRequest $request)
     {
-        //
+        $medmon = Medmon::create($request->validated());
+        return response()->json($medmon, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Medmon $medmon)
     {
-        //
+        Gate::authorize('view', $medmon);
+
+        return response()->json($medmon);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateMedmonRequest $request, Medmon $medmon)
     {
-        //
+        $medmon->update($request->validated());
+        return response()->json($medmon);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Medmon $medmon)
     {
-        //
+        Gate::authorize('delete', $medmon);
+        
+        $medmon->delete();
+        return response()->json(null, 204);
+    }
+
+    public function import(Request $request)
+    {
+        Gate::authorize('import', Medmon::class);
+
+        Excel::import(new \App\Imports\MedmonImport, $request->file('file'));
+        return response()->json(['message' => 'Import successful'], 200);
     }
 }

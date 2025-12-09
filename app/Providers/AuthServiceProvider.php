@@ -14,6 +14,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         \App\Models\Media\Media::class => \App\Policies\MediaPolicy::class,
+        \App\Models\Media\MediaGroup::class => \App\Policies\MediaGroupPolicy::class,
+        \App\Models\Medmon\Medmon::class => \App\Policies\MedmonPolicy::class,
     ];
 
     /**
