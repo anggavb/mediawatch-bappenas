@@ -82,14 +82,6 @@ class MedmonImport implements ToCollection, WithHeadingRow
     private function getMediaDomain()
     {
         return Media::select('id', 'url')->get();
-        // $mediaDomains = MediaDomain::with('media')->get();
-        
-        // return $mediaDomains->map(function ($domain) {
-        //     return [
-        //         'id' => optional($domain->media)->id,
-        //         'url' => $domain->url,
-        //     ];
-        // });
     }
 
     private function parseDateTime($date, $time)

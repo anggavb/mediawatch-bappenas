@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('medmon/search', [MedmonController::class, 'search']);
     Route::get('medmon/additional-category', [MedmonController::class, 'getAdditionalCategory']);
     Route::post('medmon/import', [MedmonController::class, 'import']);
+    Route::get('medmon/group-by-category', [MedmonController::class, 'groupByCategory']);
     Route::apiResource('medmon', MedmonController::class);
 });
 

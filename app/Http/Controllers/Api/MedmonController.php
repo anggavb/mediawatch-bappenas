@@ -32,6 +32,144 @@ class MedmonController extends Controller
         return response()->json($medmons);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreMedmonRequest $request)
+    {
+        $medmon = Medmon::create($request->validated());
+        return response()->json($medmon, 201);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Medmon $medmon)
+    {
+        Gate::authorize('view', $medmon);
+
+        return response()->json($medmon);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateMedmonRequest $request, Medmon $medmon)
+    {
+        $medmon->update($request->validated());
+        return response()->json($medmon);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Medmon $medmon)
+    {
+        Gate::authorize('delete', $medmon);
+
+        if ($medmon->active) {
+            $medmon->active = false;
+            $medmon->save();
+            return response()->json(null, 204);
+        }
+        
+        $medmon->delete();
+        return response()->json(null, 204);
+    }
+
+    public function import(Request $request)
+    {
+        Gate::authorize('import', Medmon::class);
+
+        Excel::import(new \App\Imports\MedmonImport, $request->file('file'));
+        return response()->json(['message' => 'Import successful'], 200);
+    }
+
+    public function getAdditionalCategory(Request $request)
+    {
+        $addtional = Medmon::whereHas('media', function ($query) {
+            $query->where('media_category_id', MediaCategoryEnum::tambahan->value);
+        })->get();
+
+        return response()->json($addtional);
+    }
+
+    /**
+     * Fitur ini dibuat seminimal mungkin,
+     * nantinya kemungkinan yang dipakai cuma ID nya saja
+     * jadi di frontend bakal nampilin list ini
+     * lalu user milih mana aja yang mau di masukin ke medmon
+     * yang kecentang akan lanjut, yang gak kecentang bakal di update jadi inactive
+     */
+    public function search(Request $request) // full text search
+    {
+        $request->validate([
+            'keywords' => 'required|array|min:1',
+            'keywords.*' => 'string'
+        ]);
+
+        $keywords = array_values($request->input('keywords'));
+        
+        // bangun query string untuk websearch_to_tsquery: gunakan OR antar kata/frase
+        // contoh: "bioekonomi OR Workshop Bioekonomi Indonesia 2025"
+        // escape tanda kutip tunggal pada keyword
+        $escaped = array_map(function($k){
+            return str_replace("'", "''", $k);
+        }, $keywords);
+
+        // gabungkan dengan ' OR ' sehingga websearch_to_tsquery memperlakukan sebagai OR
+        $websearch = implode(' OR ', $escaped);
+
+        // select rank dan snippet (headline) serta kolom penting
+        // rank menggunakan ts_rank_cd untuk stabilitas dan bobot
+        $sql = "
+            SELECT 
+                id,
+                title,
+                url,
+                datetime,
+                content,
+                summary,
+                speaker_id,
+                sentiment_id,
+                tags,
+                ts_rank_cd(search_vector, websearch_to_tsquery('simple', ?)) AS rank,
+                ts_headline('simple', content, websearch_to_tsquery('simple', ?), 'StartSel=<mark>,StopSel=</mark>,MaxFragments=2,MaxWords=35') AS snippet
+            FROM medmons
+            WHERE search_vector @@ websearch_to_tsquery('simple', ?)
+            ORDER BY rank DESC
+            LIMIT 200
+        ";
+        $results = DB::select($sql, [$websearch, $websearch, $websearch]);
+
+        return response()->json([
+            'total' => count($results),
+            'query' => $websearch,
+            'results' => $results
+        ]);
+    }
+
+    public function groupByCategory(Request $request)
+    {
+        // $grouped = Medmon::with(['media.category', 'media.group', 'sentiment'])
+        //     ->orderBy('media.media_category_id')
+        //     ->get()
+        //     ->groupBy(function ($item) {
+        //         return $item->sentiment ? $item->sentiment->name : 'Uncategorized';
+        //     });
+
+        $grouped = Medmon::join('media', 'media.id', '=', 'medmons.media_id')
+            ->with(['media.category', 'media.group', 'sentiment'])
+            ->orderBy('media.media_category_id')   // prioritas 1
+            ->orderBy('media.media_group_id')      // prioritas 2
+            ->select('medmons.*')                  // supaya tidak konflik kolom
+            ->get()
+            ->groupBy(fn($item) => $item->sentiment->name ?? 'Uncategorized')
+            ->sortBy(fn($group, $key) => optional($group->first()->sentiment)->id ?? PHP_INT_MAX); // supaya 'Uncategorized' di paling akhir
+
+        return response()->json($grouped);
+    }
+
     public function generateReport(Request $request)
     {
         $periode = "Selasa, 25 Juni 2024";
@@ -315,122 +453,5 @@ class MedmonController extends Controller
         $objWriter->save($filename);
 
         return response()->download($filename)->deleteFileAfterSend(true);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreMedmonRequest $request)
-    {
-        $medmon = Medmon::create($request->validated());
-        return response()->json($medmon, 201);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Medmon $medmon)
-    {
-        Gate::authorize('view', $medmon);
-
-        return response()->json($medmon);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateMedmonRequest $request, Medmon $medmon)
-    {
-        $medmon->update($request->validated());
-        return response()->json($medmon);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Medmon $medmon)
-    {
-        Gate::authorize('delete', $medmon);
-
-        if ($medmon->active) {
-            $medmon->active = false;
-            $medmon->save();
-            return response()->json(null, 204);
-        }
-        
-        $medmon->delete();
-        return response()->json(null, 204);
-    }
-
-    public function import(Request $request)
-    {
-        Gate::authorize('import', Medmon::class);
-
-        Excel::import(new \App\Imports\MedmonImport, $request->file('file'));
-        return response()->json(['message' => 'Import successful'], 200);
-    }
-
-    public function getAdditionalCategory(Request $request)
-    {
-        $addtional = Medmon::whereHas('media', function ($query) {
-            $query->where('media_category_id', MediaCategoryEnum::tambahan->value);
-        })->get();
-
-        return response()->json($addtional);
-    }
-
-    /**
-     * Fitur ini dibuat seminimal mungkin,
-     * nantinya kemungkinan yang dipakai cuma ID nya saja
-     * jadi di frontend bakal nampilin list ini
-     * lalu user milih mana aja yang mau di masukin ke medmon
-     * yang kecentang akan lanjut, yang gak kecentang bakal di update jadi inactive
-     */
-    public function search(Request $request) // full text search
-    {
-        $request->validate([
-            'keywords' => 'required|array|min:1',
-            'keywords.*' => 'string'
-        ]);
-
-        $keywords = array_values($request->input('keywords'));
-        
-        // bangun query string untuk websearch_to_tsquery: gunakan OR antar kata/frase
-        // contoh: "bioekonomi OR Workshop Bioekonomi Indonesia 2025"
-        // escape tanda kutip tunggal pada keyword
-        $escaped = array_map(function($k){
-            return str_replace("'", "''", $k);
-        }, $keywords);
-
-        // gabungkan dengan ' OR ' sehingga websearch_to_tsquery memperlakukan sebagai OR
-        $websearch = implode(' OR ', $escaped);
-
-        // select rank dan snippet (headline) serta kolom penting
-        // rank menggunakan ts_rank_cd untuk stabilitas dan bobot
-        $sql = "
-            SELECT 
-                id,
-                title,
-                url,
-                datetime,
-                content,
-                summary,
-                speaker_id,
-                sentiment_id,
-                tags,
-                ts_rank_cd(search_vector, websearch_to_tsquery('simple', ?)) AS rank,
-                ts_headline('simple', content, websearch_to_tsquery('simple', ?), 'StartSel=<mark>,StopSel=</mark>,MaxFragments=2,MaxWords=35') AS snippet
-            FROM medmons
-            WHERE search_vector @@ websearch_to_tsquery('simple', ?)
-            ORDER BY rank DESC
-            LIMIT 200
-        ";
-        $results = DB::select($sql, [$websearch, $websearch, $websearch]);
-
-        return response()->json([
-            'total' => count($results),
-            'query' => $websearch,
-            'results' => $results
-        ]);
     }
 }

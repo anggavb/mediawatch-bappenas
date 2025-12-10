@@ -14,6 +14,11 @@ class Medmon extends Model
         return $this->belongsTo(Media::class);
     }
 
+    public function sentiment()
+    {
+        return $this->belongsTo(Sentiment::class);
+    }
+
     public function speaker()
     {
         return $this->belongsTo(Speaker::class);
