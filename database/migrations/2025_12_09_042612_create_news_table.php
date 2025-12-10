@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('datetime')->nullable();
             $table->text('content')->nullable();
             $table->text('summary')->nullable();
+            $table->json('embedding')->nullable();
             $table->string('tone_content')->nullable();
 
             $table->timestamps();
