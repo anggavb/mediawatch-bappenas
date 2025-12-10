@@ -6,16 +6,18 @@ use Illuminate\Http\Request;
 use Novay\Word\Facades\Word;
 use App\Models\Medmon\Medmon;
 use PhpOffice\PhpWord\PhpWord;
+use App\Enums\MediaCategoryEnum;
 use PhpOffice\PhpWord\IOFactory;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Medmon\StoreMedmonRequest;
-use App\Http\Requests\Medmon\UpdateMedmonRequest;
 use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\TemplateProcessor;
+use App\Http\Requests\Medmon\StoreMedmonRequest;
+use App\Http\Requests\Medmon\UpdateMedmonRequest;
 
 class MedmonController extends Controller
 {
@@ -360,5 +362,62 @@ class MedmonController extends Controller
 
         Excel::import(new \App\Imports\MedmonImport, $request->file('file'));
         return response()->json(['message' => 'Import successful'], 200);
+    }
+
+    public function getAdditionalCategory(Request $request)
+    {
+        $addtional = Medmon::whereHas('media', function ($query) {
+            $query->where('media_category_id', MediaCategoryEnum::tambahan->value);
+        })->get();
+
+        return response()->json($addtional);
+    }
+
+    public function search(Request $request)
+    {
+        $request->validate([
+            'keywords' => 'required|array|min:1',
+            'keywords.*' => 'string'
+        ]);
+
+        $keywords = array_values($request->input('keywords'));
+        
+        // bangun query string untuk websearch_to_tsquery: gunakan OR antar kata/frase
+        // contoh: "bioekonomi OR Workshop Bioekonomi Indonesia 2025"
+        // escape tanda kutip tunggal pada keyword
+        $escaped = array_map(function($k){
+            return str_replace("'", "''", $k);
+        }, $keywords);
+
+        // gabungkan dengan ' OR ' sehingga websearch_to_tsquery memperlakukan sebagai OR
+        $websearch = implode(' OR ', $escaped);
+
+        // select rank dan snippet (headline) serta kolom penting
+        // rank menggunakan ts_rank_cd untuk stabilitas dan bobot
+        $sql = "
+            SELECT 
+                id,
+                title,
+                url,
+                datetime,
+                content,
+                summary,
+                speaker_id,
+                sentiment_id,
+                tags,
+                ts_rank_cd(search_vector, websearch_to_tsquery('simple', ?)) AS rank,
+                ts_headline('simple', content, websearch_to_tsquery('simple', ?), 'StartSel=<mark>,StopSel=</mark>,MaxFragments=2,MaxWords=35') AS snippet
+            FROM medmons
+            WHERE search_vector @@ websearch_to_tsquery('simple', ?)
+            ORDER BY rank DESC
+            LIMIT 200
+        ";
+        $results = DB::select($sql, [$websearch, $websearch, $websearch]);
+
+        return response()->json([
+            'total' => count($results),
+            'query' => $websearch,
+            'results' => $results
+        ]);
     }
 }

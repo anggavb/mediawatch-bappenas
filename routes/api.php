@@ -32,6 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('media-group', MediaGroupController::class);
 
     /** MEDMON */
+    Route::post('medmon/search', [MedmonController::class, 'search']);
+    Route::get('medmon/additional-category', [MedmonController::class, 'getAdditionalCategory']);
     Route::post('medmon/import', [MedmonController::class, 'import']);
     Route::apiResource('medmon', MedmonController::class);
 });
