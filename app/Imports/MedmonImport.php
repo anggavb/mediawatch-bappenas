@@ -57,7 +57,7 @@ class MedmonImport implements ToCollection, WithHeadingRow
                 'datetime' => $this->parseDateTime($row['date'], $row['time']),
                 'content' => $row['content'] ?? '', // kalo dari menu Dashboard biasanya gaada Content nya, cuma ada Summary
                 'summary' => $row['summary'],
-                'tone_content' => $row['news_tone_content'],
+                // 'tone_content' => $row['news_tone_content'],
             ]);
         }
     }

@@ -43,6 +43,7 @@ return new class extends Migration
             $table->foreignId('sentiment_id')->nullable();
             $table->foreignId('speaker_id')->nullable();
             $table->text('tags')->nullable();
+            $table->boolean('active')->default(true);
 
             $table->timestamps();
         });

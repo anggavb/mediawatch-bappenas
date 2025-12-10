@@ -351,6 +351,12 @@ class MedmonController extends Controller
     public function destroy(Medmon $medmon)
     {
         Gate::authorize('delete', $medmon);
+
+        if ($medmon->active) {
+            $medmon->active = false;
+            $medmon->save();
+            return response()->json(null, 204);
+        }
         
         $medmon->delete();
         return response()->json(null, 204);
@@ -373,7 +379,14 @@ class MedmonController extends Controller
         return response()->json($addtional);
     }
 
-    public function search(Request $request)
+    /**
+     * Fitur ini dibuat seminimal mungkin,
+     * nantinya kemungkinan yang dipakai cuma ID nya saja
+     * jadi di frontend bakal nampilin list ini
+     * lalu user milih mana aja yang mau di masukin ke medmon
+     * yang kecentang akan lanjut, yang gak kecentang bakal di update jadi inactive
+     */
+    public function search(Request $request) // full text search
     {
         $request->validate([
             'keywords' => 'required|array|min:1',
