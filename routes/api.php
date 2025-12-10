@@ -24,12 +24,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /** MEDIA */
     Route::get('media/show-unknown', [MediaController::class, 'showUnknown']);
+    Route::post('media/assign-as-new-group', [MediaController::class, 'assignAsNewGroup']);
     Route::post('media/import', [MediaController::class, 'import']);
     Route::apiResource('media', MediaController::class);
 
     /** MEDIA GROUPS */
     Route::apiResource('media-group', MediaGroupController::class);
 
+    /** MEDMON */
     Route::post('medmon/import', [MedmonController::class, 'import']);
     Route::apiResource('medmon', MedmonController::class);
 });

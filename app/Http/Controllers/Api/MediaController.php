@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\MediaCategoryEnum;
 use App\Models\Media\Media;
 use Illuminate\Http\Request;
 use App\Models\Media\MediaGroup;
@@ -27,14 +28,6 @@ class MediaController extends Controller
             ->get()
             ->sortBy(['group.order', 'category.order'])
             ->values();
-        return response()->json($media);
-    }
-
-    public function showUnknown()
-    {
-        Gate::authorize('viewAnyNull', Media::class);
-
-        $media = Media::where('media_group_id', null)->where('media_category_id', null)->get();
         return response()->json($media);
     }
 
@@ -81,5 +74,34 @@ class MediaController extends Controller
 
         Excel::import(new \App\Imports\MediaImport, $request->file('file'));
         return response()->json(['message' => 'Import successful'], 200);
+    }
+
+    public function showUnknown()
+    {
+        Gate::authorize('viewAnyNull', Media::class);
+
+        $media = Media::where('media_group_id', null)->orWhere('media_category_id', null)->get();
+        return response()->json($media);
+    }
+
+    /*
+     * Assign the media as a new group (media tambahan).
+     */
+    public function assignAsNewGroup(Request $request)
+    {
+        Gate::authorize('bulkUpdate', Media::class);
+        
+        $unknownMediaGroups = Media::select('id', 'name')->where('media_group_id', null)->where('media_category_id', null)->get();
+        foreach ($unknownMediaGroups as $media) {
+            $group = MediaGroup::firstOrCreate([
+                'name' => $media->name,
+                'is_active' => true,
+            ]);
+
+            $media->media_group_id = $group->id;
+            $media->media_category_id = MediaCategoryEnum::tambahan->value; // Media Tambahan
+            $media->save();
+        }
+        return response()->json(['message' => 'Media assigned to new groups successfully'], 200);
     }
 }

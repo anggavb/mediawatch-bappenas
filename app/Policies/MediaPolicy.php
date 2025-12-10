@@ -79,4 +79,12 @@ class MediaPolicy
     {
         return true;
     }
+
+    /**
+     * Determine whether the user can bulk update models.
+     */
+    public function bulkUpdate(User $user): bool
+    {
+        return true;
+    }
 }
