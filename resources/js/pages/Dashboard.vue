@@ -1,34 +1,30 @@
-<template>
-  <div class="dashboard-main-body">
-
-    <Breadcrumb title="Analytics" :breadcrumbs="[
-      { name: 'Analytics' }
-    ]" />
-    <div class="row gy-4">
-      <AnalyticsWidget />
-      <RevenueStatistic />
-      <SupportTracker />
-      <AverageDailySales />
-      <Transactions />
-      <SalesbyCountries />
-      <SourceVisitors />
-      <MonthlyCampaignState />
-      <RecentActivity />
-    </div>
-  </div>
-</template>
-
 <script setup>
-import Breadcrumb from '@/components/Breadcrumb.vue';
-import ApexCharts from "vue3-apexcharts";
-import { Icon } from "@iconify/vue"; 
-import AnalyticsWidget from "@/components/dashboard/AnalyticsWidget.vue"
-import RevenueStatistic from "@/components/dashboard/RevenueStatistic.vue"
-import SupportTracker from "@/components/dashboard/SupportTracker.vue"
-import AverageDailySales from "@/components/dashboard/AverageDailySales.vue"
-import Transactions from "@/components/dashboard/Transactions.vue"
-import SalesbyCountries from "@/components/dashboard/SalesbyCountries.vue"
-import SourceVisitors from "@/components/dashboard/SourceVisitors.vue"
-import MonthlyCampaignState from "@/components/dashboard/MonthlyCampaign.vue"
-import RecentActivity from "@/components/dashboard/RecentActivity.vue"
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import { Head } from '@inertiajs/vue3';
 </script>
+
+<template>
+    <Head title="Dashboard" />
+
+    <AuthenticatedLayout>
+        <template #header>
+            <h2
+                class="text-xl font-semibold leading-tight text-gray-800"
+            >
+                Dashboard
+            </h2>
+        </template>
+
+        <div class="py-12">
+            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div
+                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
+                >
+                    <div class="p-6 text-gray-900">
+                        You're logged in!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>
