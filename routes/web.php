@@ -5,13 +5,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/download/sample-import-media', App\Http\Controllers\Sample\ImportMediaController::class);
-Route::get('/medmon/generate-report', [App\Http\Controllers\Api\MedmonController::class, 'generateReport']);
-
-// Route::get('/{path?}', function () {
-//     return view('index');
-// })->where('path', '.*')->name('homepage');
-
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -20,10 +13,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
-Route::get('/analytics', function () {
-    return Inertia::render('Analytics');
-})->name('analytics');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
