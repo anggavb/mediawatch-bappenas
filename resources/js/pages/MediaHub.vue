@@ -11,7 +11,7 @@ const images = [
 
 <template>
   <div>
-    <h1 class="text-h4 font-weight-bold mb-6">Media Library</h1>
+    <h1 class="text-h4 font-weight-bold mb-6">Media Hub</h1>
 
     <v-card rounded="lg" elevation="0" class="bg-transparent">
         <v-row>

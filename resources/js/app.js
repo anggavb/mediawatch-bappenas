@@ -5,7 +5,7 @@ import App from './App.vue'
 
 import 'vuetify/styles'
 import vuetify from '@/plugins/vuetify'
-import '@/styles/settings.scss'
+import '@scss/settings.scss'
 import '@mdi/font/css/materialdesignicons.css'
 
 createApp(App)

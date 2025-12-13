@@ -6,34 +6,28 @@ export default createRouter({
   routes: [
     {
       path: '/',
-      component: () => import('@/layouts/DefaultLayout.vue'),
-      children: [
-        {
-          path: '',
-          name: 'Dashboard',
-          component: () => import('@/pages/Dashboard.vue'),
-        },
-        {
-          path: 'media',
-          name: 'Media',
-          component: () => import('@/pages/Media.vue'),
-        },
-        {
-          path: 'analytic',
-          name: 'Analytic',
-          component: () => import('@/pages/Analytic.vue'),
-        },
-        {
-            path: 'settings',
-            name: 'Settings',
-            component: () => import('@/pages/Settings.vue'),
-        },
-        {
-            path: 'crud',
-            name: 'Crud',
-            component: () => import('@/pages/Crud.vue'),
-        },
-      ],
+      name: 'Dashboard',
+      component: () => import('@/pages/Dashboard.vue'),
+    },
+    {
+      path: '/media-hub',
+      name: 'MediaHub',
+      component: () => import('@/pages/MediaHub.vue'),
+    },
+    {
+      path: '/analytic',
+      name: 'Analytic',
+      component: () => import('@/pages/Analytic.vue'),
+    },
+    {
+        path: '/settings',
+        name: 'Settings',
+        component: () => import('@/pages/Settings.vue'),
+    },
+    {
+        path: '/crud',
+        name: 'Crud',
+        component: () => import('@/pages/Crud.vue'),
     },
   ]
 })
