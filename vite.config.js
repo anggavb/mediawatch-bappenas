@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import vuetify from 'vite-plugin-vuetify';
+import fonts from 'unplugin-fonts/vite';
 
 export default defineConfig({
     plugins: [
@@ -16,5 +18,21 @@ export default defineConfig({
                 },
             },
         }),
+        vuetify(),
+        fonts({
+            provider: 'google',
+            preconnect: true,
+            fonts: [
+                {
+                    family: 'Roboto',
+                    weights: ['400', '500', '700'],
+                },
+            ],
+        }),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
 });
