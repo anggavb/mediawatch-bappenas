@@ -13,8 +13,14 @@ const images = [
   <div>
     <h1 class="text-h4 font-weight-bold mb-6">Media Hub</h1>
 
-    <v-card rounded="lg" elevation="2" class="bg-transparent">
-      
+    <v-card rounded="lg" elevation="2">
+      <v-card-text>
+        <v-row>
+          <v-col v-for="image in images" :key="image" cols="6" md="4" lg="3">
+            <v-img :src="image" aspect-ratio="1" cover></v-img>
+          </v-col>
+        </v-row>
+      </v-card-text>
     </v-card>
   </div>
 </template>

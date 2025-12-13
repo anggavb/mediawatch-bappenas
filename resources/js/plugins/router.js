@@ -58,27 +58,27 @@ export default createRouter({
         {
           path: 'dashboard',
           name: 'Dashboard',
-          component: () => import('@/pages/Dashboard.vue'),
+          component: () => import('@/pages/admin/Dashboard.vue'),
         },
         {
           path: 'media-hub',
           name: 'MediaHub',
-          component: () => import('@/pages/MediaHub.vue'),
+          component: () => import('@/pages/admin/MediaHub.vue'),
         },
         {
           path: 'analytic',
           name: 'Analytic',
-          component: () => import('@/pages/Analytic.vue'),
+          component: () => import('@/pages/admin/Analytic.vue'),
         },
         {
           path: 'settings',
           name: 'Settings',
-          component: () => import('@/pages/Settings.vue'),
+          component: () => import('@/pages/admin/Settings.vue'),
         },
         {
           path: 'crud',
           name: 'Crud',
-          component: () => import('@/pages/Crud.vue'),
+          component: () => import('@/pages/admin/Crud.vue'),
         },
       ],
     },
