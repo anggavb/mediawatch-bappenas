@@ -104,7 +104,7 @@
 import { ref, reactive } from 'vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import { useRouter } from 'vue-router';
-// import { useAuthStore } from '@/stores/auth'; // Assuming store existence, otherwise direct axios
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
 const loading = ref(false);
@@ -130,14 +130,15 @@ const handleLogin = async () => {
   
   loading.value = true;
   try {
-    // Mimic API call
-    console.log('Login attempt:', form);
-    // await axios.post('/api/auth/login', form);
-    setTimeout(() => {
-        // router.push({ name: 'Dashboard' });
-    }, 1000);
+    const authStore = useAuthStore();
+    await authStore.login(form);
+    
+    // Router redirect is handled in login action or we can do it here
+    router.push('/admin/dashboard');
+
   } catch (error) {
     console.error('Login failed', error);
+    // You might want to show a snackbar here
   } finally {
     loading.value = false;
   }

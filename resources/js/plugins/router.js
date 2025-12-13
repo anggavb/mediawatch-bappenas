@@ -1,14 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useLoadingStore } from '@/stores/loading';
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
       redirect: () => {
-        localStorage.removeItem('token') // cuma buat implement auth
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('auth_token')
         return token ? '/admin/dashboard' : '/login'
       },
     },
@@ -50,8 +48,7 @@ export default createRouter({
         {
           path: '',
           redirect: () => {
-            localStorage.setItem('token', 'asd') // cuma buat implement auth
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('auth_token')
             return token ? '/admin/dashboard' : '/login'
           },
         },
@@ -84,3 +81,44 @@ export default createRouter({
     },
   ]
 })
+
+router.beforeEach(async (to, from, next) => {
+  const { useAuthStore } = await import('@/stores/auth');
+  const authStore = useAuthStore();
+  
+  // Public pages that don't need auth
+  const publicPages = ['/login', '/register', '/forgot-password', '/verify-email'];
+  const authRequired = !publicPages.includes(to.path) && !to.path.startsWith('/reset-password') && !to.path.startsWith('/confirm-password');
+
+  // If page requires auth
+  if (authRequired) {
+    if (!authStore.token) {
+        return next('/login');
+    }
+    
+    // Optional: Verify token existence/validity via API on every navigation 
+    // This addresses the user request "check if token is active when moving pages"
+    // Note: This adds latency to navigation. 
+    try {
+        await authStore.checkAuth();
+        if (!authStore.isAuthenticated) {
+            return next('/login');
+        }
+    } catch (error) {
+        return next('/login');
+    }
+  }
+
+  // Redirect to dashboard if logged in and trying to access login
+  if (to.path === '/login' && authStore.isAuthenticated) {
+     // Verify one last time to be sure
+     await authStore.checkAuth();
+     if (authStore.isAuthenticated) {
+        return next('/admin/dashboard');
+     }
+  }
+
+  next();
+});
+
+export default router

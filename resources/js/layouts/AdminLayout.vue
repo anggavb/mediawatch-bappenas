@@ -2,9 +2,16 @@
 import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTheme } from 'vuetify';
+import { useRouter } from 'vue-router';
+// import api from '@/api'; // Removed, using store
+import { useLoadingStore } from '@/stores/loading';
+import { useAuthStore } from '@/stores/auth';
 
+const router = useRouter();
 const drawer = ref(true);
 const theme = useTheme();
+const loadingStore = useLoadingStore();
+const { isLoading, progress } = storeToRefs(loadingStore);
 
 const items = [
   { title: 'Dashboard', icon: 'mdi-view-dashboard-outline', to: '/admin/dashboard', exact: true },
@@ -13,6 +20,16 @@ const items = [
   { title: 'Settings', icon: 'mdi-cog-outline', to: '/admin/settings' },
   { title: 'CRUD', icon: 'mdi-table-edit', to: '/admin/crud' },
 ];
+
+const handleLogout = async () => {
+    try {
+        const authStore = useAuthStore();
+        await authStore.logout();
+    } catch (error) {
+        console.error('Logout failed', error);
+        // Even if API fails, client logout handles redirect
+    }
+};
 
 const backgroundStyle = computed(() => {
   const isDark = theme.global.current.value.dark;
@@ -24,6 +41,7 @@ const backgroundStyle = computed(() => {
   };
 });
 </script>
+
 
 <template>
   <v-app>
@@ -112,7 +130,7 @@ const backgroundStyle = computed(() => {
           <v-divider></v-divider>
           <v-list density="compact">
             <v-list-item prepend-icon="mdi-account-outline" title="Profile" value="profile"></v-list-item>
-            <v-list-item prepend-icon="mdi-logout" title="Logout" value="logout" color="error"></v-list-item>
+            <v-list-item prepend-icon="mdi-logout" title="Logout" value="logout" color="error" @click="handleLogout"></v-list-item>
           </v-list>
         </v-card>
       </v-menu>
