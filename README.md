@@ -1,58 +1,270 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MediaWatch Bappenas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive media monitoring and news analytics platform for Bappenas (Badan Perencanaan Pembangunan Nasional / National Development Planning Agency).
 
-## About Laravel
+## 📋 Project Description
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+MediaWatch Bappenas is a full-stack web application designed to monitor, analyze, and manage media coverage and news articles related to Bappenas activities and national development programs. The system provides powerful tools for media management, sentiment analysis, speaker tracking, and advanced full-text search capabilities.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Key capabilities include:
+- Media outlet management with categorization and grouping
+- News monitoring (Medmon) with sentiment analysis
+- Advanced PostgreSQL full-text search for rapid content discovery
+- Data import/export functionality (Excel)
+- RESTful API with authentication
+- Modern, responsive Vue.js interface
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Features
 
-## Learning Laravel
+### 🗞️ Media Management
+- **Media Hub**: Centralized management of media outlets
+- **Categories**: Organize media by type (TV, Radio, Online, Print, etc.)
+- **Media Groups**: Group related media outlets for better organization
+- **Unknown Media Detection**: Identify and assign unrecognized media sources
+- **Bulk Import**: Import media data from Excel files
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 📰 Media Monitoring (Medmon)
+- **News Tracking**: Monitor and catalog news articles and media coverage
+- **Sentiment Analysis**: Analyze sentiment of news content (positive, neutral, negative)
+- **Speaker Tracking**: Track speakers and sources mentioned in news
+- **Category Grouping**: Group and analyze news by category
+- **Full-Text Search**: Advanced search with PostgreSQL FTS
+  - Multi-keyword search support
+  - Relevance ranking
+  - Text highlighting and snippets
+  - GIN indexing for high performance
+  - Support for 50-500+ articles with 2,000-5,000 character content
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🔐 Authentication & Authorization
+- User registration and login
+- JWT-based authentication via Laravel Sanctum
+- Role-based access control
+- Rate limiting on authentication endpoints
 
-## Laravel Sponsors
+### 📊 Analytics & Reporting
+- News analytics dashboard
+- Category-based statistics
+- Media coverage reports
+- Data export functionality
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🔄 Data Management
+- Excel import for media and news data
+- Sample data generation for testing
+- Database seeding and factories
+- Policy-based authorization
 
-### Premium Partners
+## 🛠️ Tech Stack
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Backend
+- **Framework**: Laravel 12.x
+- **PHP**: 8.2+
+- **Database**: PostgreSQL (with Full-Text Search)
+- **Authentication**: Laravel Sanctum
+- **Excel Processing**: Maatwebsite Excel 3.x
+- **Document Generation**: PHPOffice PHPWord
 
-## Contributing
+### Frontend
+- **Framework**: Vue.js 3.5
+- **UI Library**: Vuetify 3.11
+- **State Management**: Pinia 3.x
+- **Router**: Vue Router 4.x
+- **HTTP Client**: Axios
+- **Build Tool**: Vite 7.x
+- **Icons**: Material Design Icons (MDI)
+- **Fonts**: Roboto
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Development Tools
+- **Laravel Pint**: Code style fixer
+- **PHPUnit**: Testing framework
+- **Laravel Sail**: Docker development environment
+- **Concurrently**: Run multiple dev servers
 
-## Code of Conduct
+## 📦 Installation Instructions
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Prerequisites
+- PHP 8.2 or higher
+- Composer
+- Node.js 18+ and npm
+- PostgreSQL 14+
+- Git
 
-## Security Vulnerabilities
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/anggavb/mediawatch-bappenas.git
+cd mediawatch-bappenas
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Step 2: Install Dependencies
+```bash
+# Install PHP dependencies
+composer install
+
+# Install Node.js dependencies
+npm install
+```
+
+### Step 3: Environment Configuration
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### Step 4: Configure Database
+Edit your `.env` file with PostgreSQL credentials:
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=mediawatch_bappenas
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### Step 5: Run Migrations and Seeders
+```bash
+# Run migrations
+php artisan migrate
+
+# Seed the database with sample data
+php artisan db:seed
+```
+
+### Step 6: Build Frontend Assets
+```bash
+# Development build
+npm run dev
+
+# Production build
+npm run build
+```
+
+### Step 7: Start the Application
+```bash
+# Start Laravel development server
+php artisan serve
+
+# In another terminal, start Vite dev server (for development)
+npm run dev
+```
+
+The application will be available at `http://localhost:8000`
+
+### Quick Setup (Alternative)
+You can use the composer setup script for a faster installation:
+```bash
+composer run setup
+```
+
+## 📖 Usage Guide
+
+### Authentication
+1. **Register a new account**:
+   - Navigate to `/register`
+   - Fill in your details
+   - Submit the registration form
+
+2. **Login**:
+   - Navigate to `/login`
+   - Enter your credentials
+   - Note: Login has rate limiting (5 attempts per minute)
+
+### Media Management
+1. **Add Media Outlet**:
+   - Go to Media Hub
+   - Click "Add New Media"
+   - Select category and group
+   - Enter media details
+   - Save
+
+2. **Import Media from Excel**:
+   - Prepare your Excel file (see sample format)
+   - Navigate to Media Import
+   - Upload your file
+   - Review and confirm import
+
+### News Monitoring
+1. **Add News Article**:
+   - Navigate to Medmon section
+   - Click "Add News"
+   - Select media outlet
+   - Enter news content, title, and details
+   - Select sentiment and speaker
+   - Save
+
+2. **Search News**:
+   - Use the search bar in Medmon
+   - Enter multiple keywords
+   - View ranked results with highlights
+   - Filter by category, date, or sentiment
+
+3. **Import News Data**:
+   - Prepare Excel file with news data
+   - Navigate to Medmon Import
+   - Upload and process
+
+### API Usage
+All API endpoints require authentication except for registration and login.
+
+**Authentication**:
+```bash
+# Login
+curl -X POST http://localhost:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"user@example.com","password":"password"}'
+
+# Use the token in subsequent requests
+curl -X GET http://localhost:8000/api/auth/user \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+**Media Endpoints**:
+- `GET /api/media` - List all media
+- `POST /api/media` - Create new media
+- `GET /api/media/{id}` - Get specific media
+- `PUT /api/media/{id}` - Update media
+- `DELETE /api/media/{id}` - Delete media
+- `POST /api/media/import` - Import from Excel
+- `GET /api/media/show-unknown` - Show unassigned media
+
+**Medmon Endpoints**:
+- `GET /api/medmon` - List all news
+- `POST /api/medmon` - Create news article
+- `POST /api/medmon/search` - Full-text search
+- `GET /api/medmon/group-by-category` - Group by category
+- `POST /api/medmon/import` - Import news data
+
+For detailed API documentation, see [FTS-system.md](FTS-system.md) for search implementation details.
+
+## 🧪 Testing
+```bash
+# Run all tests
+php artisan test
+
+# Run specific test suite
+php artisan test --testsuite=Feature
+
+# Run with coverage
+php artisan test --coverage
+```
+
+## 🔧 Development
+```bash
+# Run code style fixer
+./vendor/bin/pint
+
+# Watch for frontend changes
+npm run dev
+
+# Run both Laravel and Vite concurrently
+npm run dev & php artisan serve
+```
+
+## 👥 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
